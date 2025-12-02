@@ -67,7 +67,7 @@ router.post('/updatebook', async (req, res) => {
     }
 })
 
-router.post('/deletebook', async (req, res) => {
+router.delete('/deletebook', async (req, res) => {
     try {
         let code = req.body.code
         await controller.deleteBookByCode(code)
