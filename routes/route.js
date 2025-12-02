@@ -18,7 +18,12 @@ router.get('/books', async (req, res) => {
 
 router.get('/book/:code', async (req, res) => {
     try {
-        const { code } = req.params
+        const { code } = req.params;
+
+        if (!code || typeof code !== 'string') {
+            return res.status(400).send('Code must be a non-empty string');
+        }
+
         const data = await controller.getOne(code)
         if (!data) {
             return res.status(404).send('Book not found');
