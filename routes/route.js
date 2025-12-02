@@ -7,14 +7,24 @@ router.get('/', (req, res) => {
 })
 
 router.get('/books', async(req, res) => {
-    const data = await controller.getAll()
-    res.send(data)
+    try {
+        const data = await controller.getAll()
+        res.send(data)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 router.get('/book/:code', async(req,res) => {
     const { code } = req.params
-    const data = await controller.getOne(code)
-    res.send(data)
+    try {
+        const data = await controller.getOne(code)
+        res.send(data)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 router.post('/addbook', (req, res) => {
