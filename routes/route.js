@@ -28,16 +28,21 @@ router.post('/addbook', (req, res) => {
     res.send('Book added!!')
 })
 
-router.post('/updatebook', (req, res) => {
+router.post('/updatebook', async (req, res) => {
     const newBook = {
         code: req.body.code,
         name: req.body.name,
         author:req.body.author
     }
     
-    controller.updateNewBook(newBook)
-    res.send('1 book updated!!')
-})
+    const updateResult = await controller.updateNewBook(newBook);
+    
+    if (updateResult === 0) {
+        res.send('Book not found or no updates applied.');
+    } else {
+        res.send('Book updated!!');
+    }
+});
 
 router.post('/deletebook',(req,res)=>{
     let code = req.body.code
