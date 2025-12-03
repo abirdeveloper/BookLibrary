@@ -44,11 +44,20 @@ router.post('/updatebook', async (req, res) => {
     }
 });
 
-router.post('/deletebook',(req,res)=>{
-    let code = req.body.code
-    controller.deleteBookByCode(code)
-    res.send('Book Deleted!!')
-})
+router.post('/deletebook', async (req, res) => {
+    let code = req.body.code;
+    try {
+        const deletionResult = await controller.deleteBookByCode(code);
+        if (deletionResult > 0) {
+            res.send('Book Deleted!!');
+        } else {
+            res.status(500).send('Failed to delete book.');
+        }
+    } catch (error) {
+        console.error("Error deleting book:", error);
+        res.status(500).send('Failed to delete book.');
+    }
+});
 
 // router.get('/book/:code', async(req,res) => {
 //     const { code } = req.params
