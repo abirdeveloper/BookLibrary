@@ -7,48 +7,67 @@ router.get('/', (req, res) => {
 })
 
 router.get('/books', async(req, res) => {
-    const data = await controller.getAll()
-    res.send(data)
+    try {
+        const data = await controller.getAll()
+        res.send(data)
+    } catch (error) {
+        console.error('Error fetching all books:', error)
+        res.status(500).send('Internal Server Error')
+    }
 })
 
 router.get('/book/:code', async(req,res) => {
-    const { code } = req.params
-    const data = await controller.getOne(code)
-    res.send(data)
-})
-
-router.post('/addbook', (req, res) => {
-    const newBook = {
-        code: req.body.code,
-        name: req.body.name,
-        author:req.body.author
+    try {
+        const { code } = req.params
+        const data = await controller.getOne(code)
+        res.send(data)
+    } catch (error) {
+        console.error('Error fetching book by code:', error)
+        res.status(500).send('Internal Server Error')
     }
-    
-    controller.addNewBook(newBook)
-    res.send('Book added!!')
 })
 
-router.post('/updatebook', (req, res) => {
-    const newBook = {
-        code: req.body.code,
-        name: req.body.name,
-        author:req.body.author
+router.post('/addbook', async (req, res) => {
+    try {
+        const newBook = {
+            code: req.body.code,
+            name: req.body.name,
+            author:req.body.author
+        }
+        
+        await controller.addNewBook(newBook)
+        res.send('Book added!!')
+    } catch (error) {
+        console.error('Error adding new book:', error)
+        res.status(500).send('Internal Server Error')
     }
-    
-    controller.updateNewBook(newBook)
-    res.send('1 book updated!!')
 })
 
-router.post('/deletebook',(req,res)=>{
-    let code = req.body.code
-    controller.deleteBookByCode(code)
-    res.send('Book Deleted!!')
+router.post('/updatebook', async (req, res) => {
+    try {
+        const newBook = {
+            code: req.body.code,
+            name: req.body.name,
+            author:req.body.author
+        }
+        
+        await controller.updateNewBook(newBook)
+        res.send('1 book updated!!')
+    } catch (error) {
+        console.error('Error updating book:', error)
+        res.status(500).send('Internal Server Error')
+    }
 })
 
-// router.get('/book/:code', async(req,res) => {
-//     const { code } = req.params
-//     const data = await controller.getOne(code)
-//     res.send(data)
-// })
+router.post('/deletebook', async (req,res)=>{
+    try {
+        let code = req.body.code
+        await controller.deleteBookByCode(code)
+        res.send('Book Deleted!!')
+    } catch (error) {
+        console.error('Error deleting book:', error)
+        res.status(500).send('Internal Server Error')
+    }
+})
 
 module.exports = router
